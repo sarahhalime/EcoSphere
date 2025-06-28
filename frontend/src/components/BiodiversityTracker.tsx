@@ -6,6 +6,8 @@ const BiodiversityTracker: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState('upload');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
+  const [identificationResult, setIdentificationResult] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
   const speciesData = [
     { category: 'Birds', count: 234, trend: 5.2, color: '#3b82f6' },
@@ -66,6 +68,37 @@ const BiodiversityTracker: React.FC = () => {
       image: 'https://images.pexels.com/photos/1423600/pexels-photo-1423600.jpeg?auto=compress&cs=tinysrgb&w=800'
     },
   ];
+
+  const handleUpload = async () => {
+    if (!selectedFile) return;
+    setLoading(true);
+    setIdentificationResult(null);
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+      const response = await fetch('http://localhost:8000/api/inaturalist/identify-species', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to identify species');
+      }
+
+      const data = await response.json();
+      setIdentificationResult(data);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert('An unknown error occurred');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -194,32 +227,32 @@ const BiodiversityTracker: React.FC = () => {
         <div className="border-b border-slate-800/50">
           <nav className="flex">
             <button
-              onClick={() => setSelectedTab('upload')}
-              className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
-                selectedTab === 'upload'
-                  ? 'border-emerald-500 text-emerald-400'
-                  : 'border-transparent text-slate-400 hover:text-white'
-              }`}
+                onClick={() => setSelectedTab('upload')}
+                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                    selectedTab === 'upload'
+                        ? 'border-emerald-500 text-emerald-400'
+                        : 'border-transparent text-slate-400 hover:text-white'
+                }`}
             >
               Upload & Identify
             </button>
             <button
-              onClick={() => setSelectedTab('sightings')}
-              className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
-                selectedTab === 'sightings'
-                  ? 'border-emerald-500 text-emerald-400'
-                  : 'border-transparent text-slate-400 hover:text-white'
-              }`}
+                onClick={() => setSelectedTab('sightings')}
+                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                    selectedTab === 'sightings'
+                        ? 'border-emerald-500 text-emerald-400'
+                        : 'border-transparent text-slate-400 hover:text-white'
+                }`}
             >
               Recent Sightings
             </button>
             <button
-              onClick={() => setSelectedTab('analytics')}
-              className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
-                selectedTab === 'analytics'
-                  ? 'border-emerald-500 text-emerald-400'
-                  : 'border-transparent text-slate-400 hover:text-white'
-              }`}
+                onClick={() => setSelectedTab('analytics')}
+                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                    selectedTab === 'analytics'
+                        ? 'border-emerald-500 text-emerald-400'
+                        : 'border-transparent text-slate-400 hover:text-white'
+                }`}
             >
               Analytics
             </button>
@@ -267,28 +300,35 @@ const BiodiversityTracker: React.FC = () => {
                     <div className="mt-4 p-4 bg-slate-800/50 rounded-xl">
                       <p className="text-white">Selected: {selectedFile.name}</p>
                       <p className="text-slate-400 text-sm">Size: {(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                      <button
+                        onClick={handleUpload}
+                        disabled={loading}
+                        className="mt-4 px-6 py-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors disabled:opacity-50"
+                      >
+                        {loading ? 'Analyzing...' : 'Identify Species'}
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Display identification results */}
+                  {identificationResult && (
+                    <div className="mt-6 p-4 bg-slate-800/50 rounded-xl">
+                      <h4 className="text-lg font-semibold text-white mb-2">Identification Result:</h4>
+                      <p className="text-white"><strong>Species Guess:</strong> {identificationResult.species_guess || 'Unknown'}</p>
+                      <p className="text-white"><strong>Confidence:</strong> {(identificationResult.confidence * 100).toFixed(2)}%</p>
                     </div>
                   )}
                 </div>
               </div>
 
-              {/* AI Processing */}
-              {selectedFile && (
+              {/* AI Processing - show only when loading */}
+              {loading && (
                 <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
                   <h4 className="text-lg font-semibold text-white mb-4">AI Species Identification</h4>
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
                       <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-400"></div>
                       <span className="text-slate-300">Analyzing image with AI model...</span>
-                    </div>
-                    <div className="bg-slate-900/50 rounded-xl p-4">
-                      <p className="text-white font-medium">Expected Results:</p>
-                      <ul className="text-slate-400 text-sm mt-2 space-y-1">
-                        <li>• Species identification with confidence score</li>
-                        <li>• Conservation status (IUCN Red List)</li>
-                        <li>• Habitat information and distribution</li>
-                        <li>• Similar species comparison</li>
-                      </ul>
                     </div>
                   </div>
                 </div>
@@ -297,148 +337,148 @@ const BiodiversityTracker: React.FC = () => {
           )}
 
           {selectedTab === 'sightings' && (
-            <div className="space-y-6">
-              {/* Filters */}
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <Filter className="h-4 w-4 text-slate-400" />
-                  <span className="text-slate-400 text-sm">Filter by:</span>
+              <div className="space-y-6">
+                {/* Filters */}
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-4 w-4 text-slate-400" />
+                    <span className="text-slate-400 text-sm">Filter by:</span>
+                  </div>
+                  <select className="px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white text-sm">
+                    <option>All Species</option>
+                    <option>Birds</option>
+                    <option>Mammals</option>
+                    <option>Reptiles</option>
+                  </select>
+                  <select className="px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white text-sm">
+                    <option>All Locations</option>
+                    <option>Protected Areas</option>
+                    <option>Urban Areas</option>
+                    <option>Remote Locations</option>
+                  </select>
+                  <select className="px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white text-sm">
+                    <option>All Status</option>
+                    <option>Threatened</option>
+                    <option>Stable</option>
+                    <option>Recovering</option>
+                  </select>
                 </div>
-                <select className="px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white text-sm">
-                  <option>All Species</option>
-                  <option>Birds</option>
-                  <option>Mammals</option>
-                  <option>Reptiles</option>
-                </select>
-                <select className="px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white text-sm">
-                  <option>All Locations</option>
-                  <option>Protected Areas</option>
-                  <option>Urban Areas</option>
-                  <option>Remote Locations</option>
-                </select>
-                <select className="px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg text-white text-sm">
-                  <option>All Status</option>
-                  <option>Threatened</option>
-                  <option>Stable</option>
-                  <option>Recovering</option>
-                </select>
-              </div>
 
-              {/* Sightings Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {recentSightings.map((sighting) => (
-                  <div key={sighting.id} className="bg-slate-800/30 rounded-2xl overflow-hidden border border-slate-700/50 hover:border-slate-600/50 transition-all">
-                    <div className="aspect-video overflow-hidden">
-                      <img 
-                        src={sighting.image} 
-                        alt={sighting.commonName}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                    <div className="p-6">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h4 className="text-lg font-semibold text-white">{sighting.commonName}</h4>
-                          <p className="text-slate-400 text-sm italic">{sighting.species}</p>
+                {/* Sightings Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {recentSightings.map((sighting) => (
+                      <div key={sighting.id} className="bg-slate-800/30 rounded-2xl overflow-hidden border border-slate-700/50 hover:border-slate-600/50 transition-all">
+                        <div className="aspect-video overflow-hidden">
+                          <img
+                              src={sighting.image}
+                              alt={sighting.commonName}
+                              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          />
                         </div>
-                        <span className={`px-2 py-1 rounded-lg text-xs font-medium ${getStatusColor(sighting.status)}`}>
+                        <div className="p-6">
+                          <div className="flex items-start justify-between mb-3">
+                            <div>
+                              <h4 className="text-lg font-semibold text-white">{sighting.commonName}</h4>
+                              <p className="text-slate-400 text-sm italic">{sighting.species}</p>
+                            </div>
+                            <span className={`px-2 py-1 rounded-lg text-xs font-medium ${getStatusColor(sighting.status)}`}>
                           {sighting.status}
                         </span>
-                      </div>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center gap-2 text-slate-400">
-                          <MapPin className="h-3 w-3" />
-                          {sighting.location}
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-slate-400">Confidence: {sighting.confidence}%</span>
-                          <span className="text-slate-400">{sighting.date}</span>
-                        </div>
-                      </div>
-                      <button className="w-full mt-4 px-4 py-2 bg-slate-700/50 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors flex items-center justify-center gap-2">
-                        <Eye className="h-4 w-4" />
-                        View Details
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {selectedTab === 'analytics' && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Species by Category */}
-                <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
-                  <h4 className="text-lg font-semibold text-white mb-6">Species by Category</h4>
-                  <div className="h-80">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={speciesData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                        <XAxis dataKey="category" stroke="#64748b" />
-                        <YAxis stroke="#64748b" />
-                        <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-
-                {/* Conservation Status */}
-                <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
-                  <h4 className="text-lg font-semibold text-white mb-6">Conservation Status</h4>
-                  <div className="h-80 flex items-center justify-center">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={threatLevels}
-                          cx="50%"
-                          cy="50%"
-                          outerRadius={100}
-                          dataKey="value"
-                          label={({ name, value }) => `${name}: ${value}%`}
-                        >
-                          {threatLevels.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
-
-              {/* Species Trends */}
-              <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
-                <h4 className="text-lg font-semibold text-white mb-6">Population Trends</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {speciesData.map((species) => (
-                    <div key={species.category} className="p-4 bg-slate-900/50 rounded-xl">
-                      <div className="flex items-center justify-between mb-2">
-                        <h5 className="font-medium text-white">{species.category}</h5>
-                        <div className={`flex items-center gap-1 ${
-                          species.trend > 0 ? 'text-emerald-400' : 'text-red-400'
-                        }`}>
-                          {species.trend > 0 ? 
-                            <TrendingUp className="h-4 w-4" /> : 
-                            <TrendingDown className="h-4 w-4" />
-                          }
-                          <span className="text-sm font-medium">
-                            {species.trend > 0 ? '+' : ''}{species.trend}%
-                          </span>
+                          </div>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex items-center gap-2 text-slate-400">
+                              <MapPin className="h-3 w-3" />
+                              {sighting.location}
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-slate-400">Confidence: {sighting.confidence}%</span>
+                              <span className="text-slate-400">{sighting.date}</span>
+                            </div>
+                          </div>
+                          <button className="w-full mt-4 px-4 py-2 bg-slate-700/50 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors flex items-center justify-center gap-2">
+                            <Eye className="h-4 w-4" />
+                            View Details
+                          </button>
                         </div>
                       </div>
-                      <p className="text-slate-400 text-sm">{species.count} species documented</p>
-                    </div>
                   ))}
                 </div>
               </div>
-            </div>
+          )}
+
+          {selectedTab === 'analytics' && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Species by Category */}
+                  <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
+                    <h4 className="text-lg font-semibold text-white mb-6">Species by Category</h4>
+                    <div className="h-80">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={speciesData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                          <XAxis dataKey="category" stroke="#64748b" />
+                          <YAxis stroke="#64748b" />
+                          <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Conservation Status */}
+                  <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
+                    <h4 className="text-lg font-semibold text-white mb-6">Conservation Status</h4>
+                    <div className="h-80 flex items-center justify-center">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                              data={threatLevels}
+                              cx="50%"
+                              cy="50%"
+                              outerRadius={100}
+                              dataKey="value"
+                              label={({ name, value }) => `${name}: ${value}%`}
+                          >
+                            {threatLevels.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                          </Pie>
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Species Trends */}
+                <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
+                  <h4 className="text-lg font-semibold text-white mb-6">Population Trends</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {speciesData.map((species) => (
+                        <div key={species.category} className="p-4 bg-slate-900/50 rounded-xl">
+                          <div className="flex items-center justify-between mb-2">
+                            <h5 className="font-medium text-white">{species.category}</h5>
+                            <div className={`flex items-center gap-1 ${
+                                species.trend > 0 ? 'text-emerald-400' : 'text-red-400'
+                            }`}>
+                              {species.trend > 0 ?
+                                  <TrendingUp className="h-4 w-4" /> :
+                                  <TrendingDown className="h-4 w-4" />
+                              }
+                              <span className="text-sm font-medium">
+                            {species.trend > 0 ? '+' : ''}{species.trend}%
+                          </span>
+                            </div>
+                          </div>
+                          <p className="text-slate-400 text-sm">{species.count} species documented</p>
+                        </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
           )}
         </div>
       </div>
     </div>
-  );
+);
 };
 
 export default BiodiversityTracker;
