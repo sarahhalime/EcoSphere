@@ -13,7 +13,7 @@ import {
   ArrowDownRight,
   Eye
 } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import LeafletMap from './Map/LeafletMap';
 
 const Dashboard: React.FC = () => {
@@ -26,10 +26,7 @@ const Dashboard: React.FC = () => {
     { month: 'Jun', coverage: 79.7, restored: 55 },
   ];
 
-  const carbonData = [
-    { name: 'Sequestered', value: 2847, color: '#10b981' },
-    { name: 'Target', value: 1153, color: '#374151' },
-  ];
+
 
   const speciesData = [
     { category: 'Birds', count: 234, trend: 'up' },
@@ -75,156 +72,90 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6 hover:border-emerald-500/30 transition-all duration-300">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-slate-400 text-sm font-medium">Forest Coverage</p>
-              <p className="text-2xl font-bold text-white mt-1">79.7%</p>
-              <div className="flex items-center gap-1 mt-2">
-                <ArrowUpRight className="h-4 w-4 text-emerald-400" />
-                <span className="text-emerald-400 text-sm font-medium">+2.3%</span>
-                <span className="text-slate-500 text-sm">vs last month</span>
-              </div>
+      {/* Key Metrics - Responsive Full Width */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        {/* Forest Coverage */}
+        <div className="bg-slate-900/50 backdrop-blur-sm border border-emerald-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex-1">
+            <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Forest Coverage</p>
+            <p className="text-3xl font-extrabold text-white mt-2">79.7%</p>
+            <div className="flex items-center gap-2 mt-3">
+              <ArrowUpRight className="h-5 w-5 text-emerald-400" />
+              <span className="text-emerald-300 text-base font-semibold">+2.3%</span>
+              <span className="text-slate-500 text-xs">vs last month</span>
             </div>
-            <div className="p-3 bg-emerald-500/20 rounded-xl">
-              <TreePine className="h-6 w-6 text-emerald-400" />
-            </div>
+          </div>
+          <div className="p-5 bg-emerald-500/20 rounded-2xl flex items-center justify-center">
+            <TreePine className="h-12 w-12 text-emerald-400" />
           </div>
         </div>
 
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6 hover:border-blue-500/30 transition-all duration-300">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-slate-400 text-sm font-medium">Species Tracked</p>
-              <p className="text-2xl font-bold text-white mt-1">1,457</p>
-              <div className="flex items-center gap-1 mt-2">
-                <ArrowUpRight className="h-4 w-4 text-blue-400" />
-                <span className="text-blue-400 text-sm font-medium">+156</span>
-                <span className="text-slate-500 text-sm">this week</span>
-              </div>
+        {/* Species Tracked */}
+        <div className="bg-slate-900/50 backdrop-blur-sm border border-blue-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex-1">
+            <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Species Tracked</p>
+            <p className="text-3xl font-extrabold text-white mt-2">1,457</p>
+            <div className="flex items-center gap-2 mt-3">
+              <ArrowUpRight className="h-5 w-5 text-blue-400" />
+              <span className="text-blue-300 text-base font-semibold">+156</span>
+              <span className="text-slate-500 text-xs">this week</span>
             </div>
-            <div className="p-3 bg-blue-500/20 rounded-xl">
-              <Bird className="h-6 w-6 text-blue-400" />
-            </div>
+          </div>
+          <div className="p-5 bg-blue-500/20 rounded-2xl flex items-center justify-center">
+            <Bird className="h-12 w-12 text-blue-400" />
           </div>
         </div>
 
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6 hover:border-amber-500/30 transition-all duration-300">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-slate-400 text-sm font-medium">Carbon Captured</p>
-              <p className="text-2xl font-bold text-white mt-1">2,847</p>
-              <div className="flex items-center gap-1 mt-2">
-                <ArrowUpRight className="h-4 w-4 text-amber-400" />
-                <span className="text-amber-400 text-sm font-medium">+12.5%</span>
-                <span className="text-slate-500 text-sm">tons CO₂</span>
-              </div>
-            </div>
-            <div className="p-3 bg-amber-500/20 rounded-xl">
-              <Leaf className="h-6 w-6 text-amber-400" />
+        {/* Active Alerts */}
+        <div className="bg-slate-900/50 backdrop-blur-sm border border-red-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex-1">
+            <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Active Alerts</p>
+            <p className="text-3xl font-extrabold text-white mt-2">7</p>
+            <div className="flex items-center gap-2 mt-3">
+              <ArrowDownRight className="h-5 w-5 text-red-400" />
+              <span className="text-red-300 text-base font-semibold">3 critical</span>
+              <span className="text-slate-500 text-xs">require action</span>
             </div>
           </div>
-        </div>
-
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6 hover:border-red-500/30 transition-all duration-300">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-slate-400 text-sm font-medium">Active Alerts</p>
-              <p className="text-2xl font-bold text-white mt-1">7</p>
-              <div className="flex items-center gap-1 mt-2">
-                <ArrowDownRight className="h-4 w-4 text-red-400" />
-                <span className="text-red-400 text-sm font-medium">3 critical</span>
-                <span className="text-slate-500 text-sm">require action</span>
-              </div>
-            </div>
-            <div className="p-3 bg-red-500/20 rounded-xl">
-              <AlertTriangle className="h-6 w-6 text-red-400" />
-            </div>
+          <div className="p-5 bg-red-500/20 rounded-2xl flex items-center justify-center">
+            <AlertTriangle className="h-12 w-12 text-red-400" />
           </div>
         </div>
       </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Forest Coverage Trend */}
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-lg font-semibold text-white">Forest Coverage Trend</h3>
-              <p className="text-slate-400 text-sm">Monthly coverage percentage and restoration progress</p>
-            </div>
-            <Link to="/forest" className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 text-sm font-medium transition-colors">
-              View Details
-              <Eye className="h-4 w-4" />
-            </Link>
+      {/* Forest Coverage Trend - Full Width */}
+      <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-lg font-semibold text-white">Forest Coverage Trend</h3>
+            <p className="text-slate-400 text-sm">Monthly coverage percentage and restoration progress</p>
           </div>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={forestData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="month" stroke="#64748b" />
-                <YAxis stroke="#64748b" />
-                <Area
-                  type="monotone"
-                  dataKey="coverage"
-                  stroke="#10b981"
-                  fill="url(#forestGradient)"
-                  strokeWidth={2}
-                />
-                <defs>
-                  <linearGradient id="forestGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
+          <Link to="/forest" className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 text-sm font-medium transition-colors">
+            View Details
+            <Eye className="h-4 w-4" />
+          </Link>
         </div>
-
-        {/* Carbon Sequestration */}
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-lg font-semibold text-white">Carbon Sequestration</h3>
-              <p className="text-slate-400 text-sm">Annual target vs actual CO₂ captured (tons)</p>
-            </div>
-            <Link to="/carbon" className="flex items-center gap-1 text-amber-400 hover:text-amber-300 text-sm font-medium transition-colors">
-              Calculate
-              <Eye className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="h-64 flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={carbonData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {carbonData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="flex justify-center gap-6 mt-4">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
-              <span className="text-sm text-slate-300">Sequestered: 2,847t</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-slate-600 rounded-full"></div>
-              <span className="text-sm text-slate-300">Remaining: 1,153t</span>
-            </div>
-          </div>
+        <div className="h-96">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={forestData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+              <XAxis dataKey="month" stroke="#64748b" />
+              <YAxis stroke="#64748b" />
+              <Area
+                type="monotone"
+                dataKey="coverage"
+                stroke="#10b981"
+                fill="url(#forestGradient)"
+                strokeWidth={2}
+              />
+              <defs>
+                <linearGradient id="forestGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
