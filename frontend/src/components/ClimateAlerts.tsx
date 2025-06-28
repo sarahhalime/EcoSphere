@@ -1,117 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AlertTriangle, CloudRain, Thermometer, Wind, Eye, MapPin, Calendar, Bell, Filter, TrendingUp, Activity } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { getWeatherData, MONITORED_LOCATIONS, Location } from '../utils/weather';
+import { getClimateRiskData, getTemperatureData, RiskData } from '../utils/climateData';
 
 const ClimateAlerts: React.FC = () => {
   const [selectedSeverity, setSelectedSeverity] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
+  const [selectedLocation, setSelectedLocation] = useState('all');
+  const [alerts, setAlerts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [riskData, setRiskData] = useState<RiskData[]>([]);
+  const [temperatureData, setTemperatureData] = useState<any[]>([]);
 
-  const alerts = [
-    {
-      id: 1,
-      type: 'Wildfire Risk',
-      severity: 'critical',
-      location: 'California, USA',
-      description: 'Extreme fire weather conditions with low humidity and high winds',
-      issued: '2024-08-15T14:30:00Z',
-      expires: '2024-08-17T06:00:00Z',
-      affectedArea: '2,500 km²',
-      icon: '🔥',
-      temperature: 42,
-      humidity: 15,
-      windSpeed: 45
-    },
-    {
-      id: 2,
-      type: 'Drought Warning',
-      severity: 'high',
-      location: 'East Africa',
-      description: 'Prolonged dry conditions affecting agricultural regions',
-      issued: '2024-08-14T09:15:00Z',
-      expires: '2024-09-30T23:59:00Z',
-      affectedArea: '45,000 km²',
-      icon: '🌵',
-      temperature: 35,
-      humidity: 25,
-      windSpeed: 12
-    },
-    {
-      id: 3,
-      type: 'Flood Risk',
-      severity: 'medium',
-      location: 'Bangladesh',
-      description: 'Heavy monsoon rains expected to cause river overflow',
-      issued: '2024-08-13T18:45:00Z',
-      expires: '2024-08-20T12:00:00Z',
-      affectedArea: '8,200 km²',
-      icon: '🌊',
-      temperature: 28,
-      humidity: 85,
-      windSpeed: 25
-    },
-    {
-      id: 4,
-      type: 'Heat Wave',
-      severity: 'high',
-      location: 'Southern Europe',
-      description: 'Extreme temperatures exceeding 40°C for extended period',
-      issued: '2024-08-12T12:00:00Z',
-      expires: '2024-08-18T23:59:00Z',
-      affectedArea: '15,000 km²',
-      icon: '🌡️',
-      temperature: 43,
-      humidity: 30,
-      windSpeed: 8
-    },
-    {
-      id: 5,
-      type: 'Deforestation Alert',
-      severity: 'critical',
-      location: 'Amazon Basin, Brazil',
-      description: 'Illegal logging activity detected via satellite monitoring',
-      issued: '2024-08-11T08:20:00Z',
-      expires: '2024-08-25T23:59:00Z',
-      affectedArea: '125 km²',
-      icon: '🪓',
-      temperature: 32,
-      humidity: 70,
-      windSpeed: 15
-    },
-    {
-      id: 6,
-      type: 'Storm Warning',
-      severity: 'medium',
-      location: 'Caribbean Sea',
-      description: 'Tropical storm formation with potential for hurricane development',
-      issued: '2024-08-10T20:30:00Z',
-      expires: '2024-08-16T06:00:00Z',
-      affectedArea: '18,500 km²',
-      icon: '🌀',
-      temperature: 29,
-      humidity: 75,
-      windSpeed: 65
-    }
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // Fetch weather alerts
+        const allAlerts = await Promise.all(
+          MONITORED_LOCATIONS.map(location => getWeatherData(location.name))
+        );
+        setAlerts(allAlerts.flat());
 
-  const temperatureData = [
-    { time: '00:00', temp: 24, avg: 22 },
-    { time: '04:00', temp: 21, avg: 20 },
-    { time: '08:00', temp: 28, avg: 25 },
-    { time: '12:00', temp: 35, avg: 32 },
-    { time: '16:00', temp: 38, avg: 35 },
-    { time: '20:00', temp: 32, avg: 30 },
-  ];
+        // Fetch climate risk data
+        const riskData = await getClimateRiskData();
+        setRiskData(riskData);
 
-  const riskData = [
-    { month: 'Jan', fire: 15, drought: 25, flood: 35, storm: 20 },
-    { month: 'Feb', fire: 18, drought: 30, flood: 25, storm: 15 },
-    { month: 'Mar', fire: 25, drought: 35, flood: 20, storm: 25 },
-    { month: 'Apr', fire: 35, drought: 45, flood: 30, storm: 35 },
-    { month: 'May', fire: 45, drought: 55, flood: 40, storm: 45 },
-    { month: 'Jun', fire: 55, drought: 65, flood: 25, storm: 35 },
-    { month: 'Jul', fire: 65, drought: 75, flood: 15, storm: 25 },
-    { month: 'Aug', fire: 75, drought: 80, flood: 35, storm: 55 },
-  ];
+        // Get temperature data
+        const tempData = getTemperatureData();
+        setTemperatureData(tempData);
+      } catch (err) {
+        setError('Failed to fetch weather data');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+    // Refresh data every 15 minutes
+    const interval = setInterval(fetchData, 15 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -145,7 +78,8 @@ const ClimateAlerts: React.FC = () => {
   const filteredAlerts = alerts.filter(alert => {
     const severityMatch = selectedSeverity === 'all' || alert.severity === selectedSeverity;
     const typeMatch = selectedType === 'all' || alert.type.toLowerCase().includes(selectedType.toLowerCase());
-    return severityMatch && typeMatch;
+    const locationMatch = selectedLocation === 'all' || alert.location === selectedLocation;
+    return severityMatch && typeMatch && locationMatch;
   });
 
   const criticalCount = alerts.filter(a => a.severity === 'critical').length;
@@ -238,7 +172,9 @@ const ClimateAlerts: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               <Thermometer className="h-5 w-5 text-red-400" />
-              <span className="text-red-400 font-medium">38°C</span>
+              <span className="text-red-400 font-medium">
+                {temperatureData.length > 0 ? `${temperatureData[temperatureData.length - 1].temp}°C` : '38°C'}
+              </span>
             </div>
           </div>
           <div className="h-64">
@@ -246,7 +182,7 @@ const ClimateAlerts: React.FC = () => {
               <LineChart data={temperatureData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                 <XAxis dataKey="time" stroke="#64748b" />
-                <YAxis stroke="#64748b" />
+                <YAxis stroke="#64748b" domain={['auto', 'auto']} />
                 <Line
                   type="monotone"
                   dataKey="temp"
@@ -280,7 +216,7 @@ const ClimateAlerts: React.FC = () => {
               <AreaChart data={riskData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                 <XAxis dataKey="month" stroke="#64748b" />
-                <YAxis stroke="#64748b" />
+                <YAxis stroke="#64748b" domain={[0, 100]} />
                 <Area
                   type="monotone"
                   dataKey="fire"
@@ -344,6 +280,22 @@ const ClimateAlerts: React.FC = () => {
             <Filter className="h-4 w-4 text-slate-400" />
             <span className="text-slate-400 text-sm font-medium">Filter alerts:</span>
           </div>
+
+          {/* Add location filter */}
+          <select
+            value={selectedLocation}
+            onChange={(e) => setSelectedLocation(e.target.value)}
+            className="px-4 py-2 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          >
+            <option value="all">All Locations</option>
+            {MONITORED_LOCATIONS.map((location: Location) => (
+              <option key={location.id} value={location.name}>
+                {location.name} ({location.region})
+              </option>
+            ))}
+          </select>
+
+          {/* Existing severity and type filters */}
           <select
             value={selectedSeverity}
             onChange={(e) => setSelectedSeverity(e.target.value)}
@@ -373,6 +325,20 @@ const ClimateAlerts: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Loading and Error States */}
+      {loading && (
+        <div className="text-center p-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500 mx-auto mb-2"></div>
+          <p className="text-slate-400">Loading alerts...</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl text-center">
+          {error}
+        </div>
+      )}
 
       {/* Alerts List */}
       <div className="space-y-4">
