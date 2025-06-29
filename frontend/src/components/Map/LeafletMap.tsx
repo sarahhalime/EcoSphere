@@ -31,16 +31,18 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
   useEffect(() => {
     // Initialize map only once when component mounts
     if (mapRef.current && !mapInstanceRef.current) {
-      const map = L.map(mapRef.current).setView(center, zoom);
-      
+      const map = L.map(mapRef.current, { zoomControl: false }).setView(center, zoom);
       // Use a terrain tileset instead of the default OpenStreetMap style
       L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
         maxZoom: 17
       }).addTo(map);
-      
+
+      // Add zoom control to bottom right
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
+
       mapInstanceRef.current = map;
-      
+
       return () => {
         map.remove();
         mapInstanceRef.current = null;
