@@ -351,13 +351,13 @@ useEffect(() => {
             <Search className="h-4 w-4" />
             Search Species
           </button>
-          <button
+          {/* <button
             className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors"
             onClick={() => setShowMapModal(true)}
           >
             <MapPin className="h-4 w-4" />
             View Map
-          </button>
+          </button> */}
         </div>
       </div>
 
