@@ -90,148 +90,69 @@ const ForestMonitor: React.FC = () => {
         </div>
       </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-emerald-500/20 rounded-xl">
-              <TreePine className="h-6 w-6 text-emerald-400" />
-            </div>
-            <div>
-              <p className="text-slate-400 text-sm">Global Coverage</p>
-              <p className="text-2xl font-bold text-white">78.9%</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-emerald-400" />
-            <span className="text-emerald-400 text-sm font-medium">+0.7% vs last month</span>
-          </div>
-        </div>
-
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-red-500/20 rounded-xl">
-              <TrendingDown className="h-6 w-6 text-red-400" />
-            </div>
-            <div>
-              <p className="text-slate-400 text-sm">Forest Loss</p>
-              <p className="text-2xl font-bold text-white">1.3M</p>
+      {/* Key Metrics - Full Width */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+        {/* Global Coverage */}
+        <div className="bg-slate-900/50 backdrop-blur-md border border-emerald-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
+          <div className="flex-1">
+            <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Global Coverage</p>
+            <p className="text-3xl font-extrabold text-white mt-2">78.9%</p>
+            <div className="flex items-center gap-2 mt-3">
+              <TrendingUp className="h-5 w-5 text-emerald-400" />
+              <span className="text-emerald-300 text-base font-semibold">+0.7%</span>
+              <span className="text-slate-500 text-xs">vs last month</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <TrendingDown className="h-4 w-4 text-red-400" />
-            <span className="text-red-400 text-sm font-medium">hectares this month</span>
+          <div className="p-5 bg-emerald-500/20 rounded-2xl flex items-center justify-center">
+            <TreePine className="h-12 w-12 text-emerald-400" />
           </div>
         </div>
 
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-blue-500/20 rounded-xl">
-              <TrendingUp className="h-6 w-6 text-blue-400" />
-            </div>
-            <div>
-              <p className="text-slate-400 text-sm">Forest Gain</p>
-              <p className="text-2xl font-bold text-white">2.0M</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-blue-400" />
-            <span className="text-blue-400 text-sm font-medium">hectares restored</span>
-          </div>
-        </div>
-
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-purple-500/20 rounded-xl">
-              <Satellite className="h-6 w-6 text-purple-400" />
-            </div>
-            <div>
-              <p className="text-slate-400 text-sm">Satellite Updates</p>
-              <p className="text-2xl font-bold text-white">Daily</p>
+        {/* Forest Loss */}
+        <div className="bg-slate-900/50 backdrop-blur-md border border-red-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
+          <div className="flex-1">
+            <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Forest Loss</p>
+            <p className="text-3xl font-extrabold text-white mt-2">1.3M</p>
+            <div className="flex items-center gap-2 mt-3">
+              <TrendingDown className="h-5 w-5 text-red-400" />
+              <span className="text-red-300 text-base font-semibold">hectares this month</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Eye className="h-4 w-4 text-purple-400" />
-            <span className="text-purple-400 text-sm font-medium">Latest: 2 hours ago</span>
+          <div className="p-5 bg-red-500/20 rounded-2xl flex items-center justify-center">
+            <TrendingDown className="h-12 w-12 text-red-400" />
           </div>
         </div>
       </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Forest Coverage Trend */}
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-lg font-semibold text-white">Forest Coverage Trend</h3>
-              <p className="text-slate-400 text-sm">Monthly forest coverage percentage over time</p>
-            </div>
-          </div>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={forestData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="month" stroke="#64748b" />
-                <YAxis stroke="#64748b" domain={['dataMin - 1', 'dataMax + 1']} />
-                <Area
-                  type="monotone"
-                  dataKey="coverage"
-                  stroke="#10b981"
-                  fill="url(#forestGradient)"
-                  strokeWidth={3}
-                />
-                <defs>
-                  <linearGradient id="forestGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-              </AreaChart>
-            </ResponsiveContainer>
+      {/* Forest Coverage Trend - Full Width */}
+      <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-8 w-full">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-lg font-semibold text-white">Forest Coverage Trend</h3>
+            <p className="text-slate-400 text-sm">Monthly forest coverage percentage over time</p>
           </div>
         </div>
-
-        {/* Forest Loss vs Gain */}
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-lg font-semibold text-white">Forest Loss vs Gain</h3>
-              <p className="text-slate-400 text-sm">Comparison of deforestation and restoration</p>
-            </div>
-          </div>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={forestData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="month" stroke="#64748b" />
-                <YAxis stroke="#64748b" />
-                <Line
-                  type="monotone"
-                  dataKey="loss"
-                  stroke="#ef4444"
-                  strokeWidth={3}
-                  dot={{ fill: '#ef4444', strokeWidth: 2, r: 4 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="gain"
-                  stroke="#22c55e"
-                  strokeWidth={3}
-                  dot={{ fill: '#22c55e', strokeWidth: 2, r: 4 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="flex justify-center gap-6 mt-4">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-              <span className="text-sm text-slate-300">Forest Loss</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span className="text-sm text-slate-300">Forest Gain</span>
-            </div>
-          </div>
+        <div className="h-96 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={forestData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+              <XAxis dataKey="month" stroke="#64748b" />
+              <YAxis stroke="#64748b" domain={['dataMin - 1', 'dataMax + 1']} />
+              <Area
+                type="monotone"
+                dataKey="coverage"
+                stroke="#10b981"
+                fill="url(#forestGradient)"
+                strokeWidth={3}
+              />
+              <defs>
+                <linearGradient id="forestGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/>
+                  <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
@@ -271,49 +192,6 @@ const ForestMonitor: React.FC = () => {
         </div>
       </div>
 
-      {/* Satellite Alerts */}
-      <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h3 className="text-lg font-semibold text-white">Recent Satellite Alerts</h3>
-            <p className="text-slate-400 text-sm">Latest deforestation alerts and changes detected via satellite imagery</p>
-          </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 text-slate-300 rounded-xl border border-slate-700/50 hover:border-slate-600/50 transition-colors">
-            <Filter className="h-4 w-4" />
-            Filter Alerts
-          </button>
-        </div>
-        <div className="space-y-4">
-          {satelliteData.map((alert, index) => (
-            <div key={index} className={`p-4 rounded-xl border ${getSeverityColor(alert.severity)}`}>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="font-medium text-white">{alert.type}</span>
-                    <span className={`px-2 py-1 rounded-lg text-xs font-medium ${getSeverityColor(alert.severity)}`}>
-                      {alert.severity}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-slate-400">
-                    <span className="flex items-center gap-1">
-                      <MapPin className="h-3 w-3" />
-                      {alert.location}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      {alert.date}
-                    </span>
-                    <span>Area: {alert.area}</span>
-                  </div>
-                </div>
-                <button className="px-3 py-1 bg-slate-700/50 text-slate-300 rounded-lg text-sm hover:bg-slate-700 transition-colors">
-                  View Details
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };
