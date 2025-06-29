@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Bird, Camera, Upload, MapPin, Search, Filter, TrendingUp, TrendingDown, Star, Eye, Info, ChevronRight, Leaf, AlertTriangle, Loader2 } from 'lucide-react';
+import { Bird, Camera, MapPin, Search, Filter, TrendingUp, TrendingDown, Star, Eye, Info, ChevronRight, Leaf, AlertTriangle, Loader2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { fetchINaturalistConservationStatus, ConservationStatusData, speciesCategories } from './BiodiversityAnalytics';
 import LeafletMap from './Map/LeafletMap';
@@ -35,16 +35,16 @@ useEffect(() => {
 }, []);
 //Biodiversity Analytics State Ends
 
-  const [selectedTab, setSelectedTab] = useState('upload');
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [dragActive, setDragActive] = useState(false);
+  const [selectedTab, setSelectedTab] = useState('search');
+  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // const [dragActive, setDragActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [wikiResults, setWikiResults] = useState<Record<string, SpeciesWikiInfo>>({});
   const [isWikiLoading, setIsWikiLoading] = useState<Record<number, boolean>>({});
   const [selectedSpecies, setSelectedSpecies] = useState<number | null>(null);
-    const [identificationResult, setIdentificationResult] = useState<any>(null);
-    const [loading, setLoading] = useState(false);
+    // const [identificationResult, setIdentificationResult] = useState<any>(null);
+    // const [loading, setLoading] = useState(false);
     const [showMapModal, setShowMapModal] = useState(false);
 
   const speciesData = [
@@ -107,36 +107,36 @@ useEffect(() => {
     },
   ];
 
-    const handleUpload = async () => {
-        if (!selectedFile) return;
-        setLoading(true);
-        setIdentificationResult(null);
-
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-
-        try {
-            const response = await fetch('http://localhost:8000/api/inaturalist/identify-species', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to identify species');
-            }
-
-            const data = await response.json();
-            setIdentificationResult(data);
-        } catch (error) {
-            if (error instanceof Error) {
-                alert(error.message);
-            } else {
-                alert('An unknown error occurred');
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
+    // const handleUpload = async () => {
+    //     if (!selectedFile) return;
+    //     setLoading(true);
+    //     setIdentificationResult(null);
+    //
+    //     const formData = new FormData();
+    //     formData.append('file', selectedFile);
+    //
+    //     try {
+    //         const response = await fetch('http://localhost:8000/api/inaturalist/identify-species', {
+    //             method: 'POST',
+    //             body: formData,
+    //         });
+    //
+    //         if (!response.ok) {
+    //             throw new Error('Failed to identify species');
+    //         }
+    //
+    //         const data = await response.json();
+    //         setIdentificationResult(data);
+    //     } catch (error) {
+    //         if (error instanceof Error) {
+    //             alert(error.message);
+    //         } else {
+    //             alert('An unknown error occurred');
+    //         }
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
   // Sample species database with more comprehensive information
   const speciesDatabase = [
     {
@@ -310,30 +310,30 @@ useEffect(() => {
     }
   };
 
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === 'dragenter' || e.type === 'dragover') {
-      setDragActive(true);
-    } else if (e.type === 'dragleave') {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setSelectedFile(e.dataTransfer.files[0]);
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-    }
-  };
+  // const handleDrag = (e: React.DragEvent) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   if (e.type === 'dragenter' || e.type === 'dragover') {
+  //     setDragActive(true);
+  //   } else if (e.type === 'dragleave') {
+  //     setDragActive(false);
+  //   }
+  // };
+  //
+  // const handleDrop = (e: React.DragEvent) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   setDragActive(false);
+  //   if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+  //     setSelectedFile(e.dataTransfer.files[0]);
+  //   }
+  // };
+  //
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     setSelectedFile(e.target.files[0]);
+  //   }
+  // };
 
   return (
     <div className="p-6 space-y-6">
@@ -404,16 +404,7 @@ useEffect(() => {
       <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl">
         <div className="border-b border-slate-800/50">
           <nav className="flex flex-wrap">
-            <button
-                onClick={() => setSelectedTab('upload')}
-                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
-                    selectedTab === 'upload'
-                        ? 'border-emerald-500 text-emerald-400'
-                        : 'border-transparent text-slate-400 hover:text-white'
-                }`}
-            >
-              Upload & Identify
-            </button>
+            {/* Upload & Identify tab removed */}
               <button
                   onClick={() => setSelectedTab('search')}
                   className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
@@ -448,81 +439,7 @@ useEffect(() => {
         </div>
 
         <div className="p-6">
-          {selectedTab === 'upload' && (
-            <div className="space-y-6">
-              {/* Upload Area */}
-              <div
-                className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
-                  dragActive 
-                    ? 'border-emerald-500 bg-emerald-500/10' 
-                    : 'border-slate-700 hover:border-slate-600'
-                }`}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-              >
-                <div className="space-y-4">
-                  <div className="mx-auto w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center">
-                    <Camera className="h-8 w-8 text-emerald-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-2">Upload Species Photo</h3>
-                    <p className="text-slate-400 mb-4">Drag and drop your image here, or click to browse</p>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="hidden"
-                      id="file-upload"
-                    />
-                    <label
-                      htmlFor="file-upload"
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors cursor-pointer"
-                    >
-                      <Upload className="h-4 w-4" />
-                      Choose File
-                    </label>
-                  </div>
-                  {selectedFile && (
-                    <div className="mt-4 p-4 bg-slate-800/50 rounded-xl">
-                      <p className="text-white">Selected: {selectedFile.name}</p>
-                      <p className="text-slate-400 text-sm">Size: {(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
-                      <button
-                        onClick={handleUpload}
-                        disabled={loading}
-                        className="mt-4 px-6 py-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-colors disabled:opacity-50"
-                      >
-                        {loading ? 'Analyzing...' : 'Identify Species'}
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Display identification results */}
-                  {identificationResult && (
-                    <div className="mt-6 p-4 bg-slate-800/50 rounded-xl">
-                      <h4 className="text-lg font-semibold text-white mb-2">Identification Result:</h4>
-                      <p className="text-white"><strong>Species Guess:</strong> {identificationResult.species_guess || 'Unknown'}</p>
-                      <p className="text-white"><strong>Confidence:</strong> {(identificationResult.confidence * 100).toFixed(2)}%</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* AI Processing - show only when loading */}
-              {loading && (
-                <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
-                  <h4 className="text-lg font-semibold text-white mb-4">AI Species Identification</h4>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-400"></div>
-                      <span className="text-slate-300">Analyzing image with AI model...</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+          {/* Upload & Identify tab content removed */}
 
           {selectedTab === 'search' && (
             <div className="space-y-6">
