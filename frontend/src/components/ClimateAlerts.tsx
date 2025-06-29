@@ -118,14 +118,8 @@ const ClimateAlerts: React.FC = () => {
           <p className="text-slate-400 mt-1">Real-time climate hazard warnings and environmental risk assessment</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-red-500/20 text-red-400 rounded-xl border border-red-500/30 hover:bg-red-500/30 transition-colors">
-            <Bell className="h-4 w-4" />
-            Subscribe to Alerts
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-500/20 text-blue-400 rounded-xl border border-blue-500/30 hover:bg-blue-500/30 transition-colors">
-            <MapPin className="h-4 w-4" />
-            View Map
-          </button>
+          {/* Subscribe to Alerts button removed */}
+          {/* View Map button removed */}
         </div>
       </div>
 

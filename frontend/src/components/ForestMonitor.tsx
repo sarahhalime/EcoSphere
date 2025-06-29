@@ -139,10 +139,7 @@ const ForestMonitor: React.FC = () => {
             <option value="southeast">Southeast Asia</option>
             <option value="atlantic">Atlantic Forest</option>
           </select>
-          <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors">
-            <Download className="h-4 w-4" />
-            Export Data
-          </button>
+          {/* Export Data button removed */}
         </div>
       </div>
 
