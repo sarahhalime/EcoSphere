@@ -388,9 +388,9 @@ const Dashboard: React.FC = () => {
         <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-white">Active Projects</h3>
-            <Link to="/projects" className="text-emerald-400 hover:text-emerald-300 text-sm font-medium transition-colors">
+            {/* <Link to="/projects" className="text-emerald-400 hover:text-emerald-300 text-sm font-medium transition-colors">
               Manage All
-            </Link>
+            </Link> */}
           </div>
           <div className="space-y-4">
             {recentProjects.map((project) => (
