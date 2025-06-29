@@ -7,6 +7,9 @@ import { TbAlignLeft } from "react-icons/tb";
 import { IoCloseSharp } from "react-icons/io5";
 
 const ChatPage = () => {
+  useSendbirdAuth();
+
+
   // — State hooks
   const [channels, setChannels] = useState<any[]>([]);
   const [currentChannel, setCurrentChannel] = useState<any | null>(null);
@@ -28,14 +31,40 @@ const ChatPage = () => {
   const [allUsers, setAllUsers] = useState<any[]>([]);
   const [memberSearch, setMemberSearch] = useState(""); // <-- Add this line
 
-  useSendbirdAuth();
+
   const { user } = useUser();
 
+  const waitForConnection = async () => {
+  const maxTries = 20;
+  let tries = 0;
+
+  while (!(sb as any)._isConnected && tries < maxTries) {
+    await new Promise((res) => setTimeout(res, 200));
+    tries++;
+  }
+
+  if (!(sb as any)._isConnected) {
+    throw new Error("Sendbird not connected after waiting");
+  }
+};
+
+useEffect(() => {
+  (async () => {
+    try {
+      await waitForConnection();
+      fetchChannels();
+      fetchAllUsers();
+    } catch (err) {
+      console.error("Connection timeout:", err);
+    }
+  })();
+}, []);
+
   // — Load channels & users on mount
-  useEffect(() => {
-    fetchChannels();
-    fetchAllUsers();
-  }, []);
+  // useEffect(() => {
+  //   fetchChannels();
+  //   fetchAllUsers();
+  // }, []);
 
   const fetchChannels = () => {
     const q = sb.GroupChannel.createMyGroupChannelListQuery();
@@ -54,23 +83,46 @@ const ChatPage = () => {
     }
   };
 
+  // const openChannel = async (ch: any) => {
+  //   setCurrentChannel(ch);
+
+  //   // Load messages
+  //   const msgs = await new Promise<BaseMessage[]>((res) => {
+  //     const q = ch.createPreviousMessageListQuery();
+  //     q.load(30, true, (m: BaseMessage[], e: Error | null) => {
+  //       if (!e) res(m);
+  //       else res([]);
+  //     });
+  //   });
+  //   setMessages(msgs);
+
+  //   // Load members
+  //   const mems = await ch.getMembers();
+  //   setChannelMembers(mems);
+  // };
+
   const openChannel = async (ch: any) => {
-    setCurrentChannel(ch);
+  try {
+    const fullChannel = await sb.GroupChannel.getChannel(ch.url); // fetch full channel object
+    setCurrentChannel(fullChannel);
 
     // Load messages
-    const msgs = await new Promise<BaseMessage[]>((res) => {
-      const q = ch.createPreviousMessageListQuery();
-      q.load(30, true, (m, e) => {
-        if (!e) res(m);
-        else res([]);
-      });
-    });
+    const q = fullChannel.createPreviousMessageListQuery();
+    let msgs: any[] = [];
+    try {
+      msgs = await q.load(30, true);
+    } catch (e) {
+      msgs = [];
+    }
     setMessages(msgs);
 
     // Load members
-    const mems = await ch.getMembers();
+    const mems = fullChannel.members; // use the members property
     setChannelMembers(mems);
-  };
+  } catch (err) {
+    console.error("Error opening channel:", err);
+  }
+};
 
   const sendMessage = () => {
     if (!message.trim() || !currentChannel) return;
@@ -108,31 +160,6 @@ const ChatPage = () => {
     }
   };
 
-  const deleteGroupChannel = async () => {
-    if (!currentChannel) return;
-    if (!confirm(`Delete channel "${currentChannel.name}"?`)) return;
-
-    try {
-      await currentChannel.delete();
-      setCurrentChannel(null);
-      setMessages([]);
-      setChannelMembers([]);
-      fetchChannels();
-    } catch (err) {
-      console.error("Error deleting channel:", err);
-    }
-  };
-
-  const removeUser = async (uid: string) => {
-    if (!currentChannel) return;
-    try {
-      await currentChannel.removeMembers([uid]);
-      const mems = await currentChannel.getMembers();
-      setChannelMembers(mems);
-    } catch (err) {
-      console.error("Error removing user:", err);
-    }
-  };
 
   const openAddModal = () => {
     setShowAddModal(true);
@@ -140,20 +167,6 @@ const ChatPage = () => {
     setAddSelectedIds([]);
   };
 
-  const handleAddSubmit = async () => {
-    if (!currentChannel || addSelectedIds.length === 0) return;
-    try {
-      await currentChannel.inviteWithUserIds(addSelectedIds);
-      const mems = await currentChannel.getMembers();
-      setChannelMembers(mems);
-      fetchChannels();
-      setShowAddModal(false);
-    } catch (err) {
-      console.error("Error adding users:", err);
-    }
-  };
-
-  // — Filters
   const filteredCreateUsers = allUsers.filter((u) =>
     (u.primaryEmailAddress?.emailAddress || u.userId)
       .toLowerCase()
@@ -175,7 +188,6 @@ const ChatPage = () => {
   // — UI
   return (
     <div className="flex h-[630px] text-white">
-      {/* Sidebar */}
       <div className="w-1/3 p-4 border-r bg-gray-800">
         <button
           className="w-full mb-2 py-2 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-lg"

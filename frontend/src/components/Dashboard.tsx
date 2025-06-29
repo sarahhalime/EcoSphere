@@ -175,7 +175,12 @@ const Dashboard: React.FC = () => {
           <h1 className="text-3xl font-bold text-white">Environmental Dashboard</h1>
           <p className="text-slate-400 mt-1">Monitor global forest health, biodiversity, and climate action</p>
         </div>
-        
+        <div className="flex items-center gap-3">
+          <div className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30 text-sm font-medium">
+            <Calendar className="inline h-4 w-4 mr-2" />
+            Last updated: {isLoadingForest || isLoadingAlerts ? 'Loading...' : '15 mins ago'}
+          </div>
+        </div>
       </div>
 
       {/* Key Metrics - Responsive Full Width */}
@@ -383,9 +388,9 @@ const Dashboard: React.FC = () => {
         <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-white">Active Projects</h3>
-            <Link to="/projects" className="text-emerald-400 hover:text-emerald-300 text-sm font-medium transition-colors">
+            {/* <Link to="/projects" className="text-emerald-400 hover:text-emerald-300 text-sm font-medium transition-colors">
               Manage All
-            </Link>
+            </Link> */}
           </div>
           <div className="space-y-4">
             {recentProjects.map((project) => (
