@@ -368,16 +368,16 @@ useEffect(() => {
           <div className="flex flex-col items-center w-full">
             <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Total Species</p>
             <div className="flex items-center justify-center gap-3 mt-2">
-              <span className="text-3xl font-extrabold text-white">1,269</span>
+              <span className="text-3xl font-extrabold text-white">8</span>
               <span className="p-2 bg-blue-500/20 rounded-xl flex items-center justify-center">
                 <Bird className="h-8 w-8 text-blue-400" />
               </span>
             </div>
-            <div className="flex items-center gap-2 mt-3">
+            {/* <div className="flex items-center gap-2 mt-3">
               <TrendingUp className="h-4 w-4 text-emerald-400" />
               <span className="text-emerald-300 text-base font-semibold">+156</span>
               <span className="text-slate-500 text-xs">this month</span>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -386,16 +386,16 @@ useEffect(() => {
           <div className="flex flex-col items-center w-full">
             <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Photo Uploads</p>
             <div className="flex items-center justify-center gap-3 mt-2">
-              <span className="text-3xl font-extrabold text-white">1,269</span>
+              <span className="text-3xl font-extrabold text-white">7</span>
               <span className="p-2 bg-emerald-500/20 rounded-xl flex items-center justify-center">
                 <Camera className="h-8 w-8 text-emerald-400" />
               </span>
             </div>
-            <div className="flex items-center gap-2 mt-3">
+            {/* <div className="flex items-center gap-2 mt-3">
               <TrendingUp className="h-4 w-4 text-emerald-400" />
               <span className="text-emerald-300 text-base font-semibold">+156</span>
               <span className="text-slate-500 text-xs">this month</span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
