@@ -175,12 +175,12 @@ const Dashboard: React.FC = () => {
           <h1 className="text-3xl font-bold text-white">Environmental Dashboard</h1>
           <p className="text-slate-400 mt-1">Monitor global forest health, biodiversity, and climate action</p>
         </div>
-        <div className="flex items-center gap-3">
+        {/* <div className="flex items-center gap-3">
           <div className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30 text-sm font-medium">
             <Calendar className="inline h-4 w-4 mr-2" />
             Last updated: {isLoadingForest || isLoadingAlerts ? 'Loading...' : '15 mins ago'}
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Key Metrics - Responsive Full Width */}
