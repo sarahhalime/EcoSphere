@@ -36,8 +36,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { name: 'Biodiversity', href: '/biodiversity', icon: Bird },
     { name: 'Climate Alerts', href: '/climate', icon: CloudRain },
     { name: 'EcoAI Chat', href: '/ecoai', icon: Brain },
-    { name: 'My Inbox', href: '/my-inbox', icon: MessageCircle },
-  ];
+    isSignedIn ? { name: 'My Inbox', href: '/my-inbox', icon: MessageCircle } : null,
+    // { name: 'My Inbox', href: '/my-inbox', icon: MessageCircle },
+  ].filter(Boolean);
 
   return (
     <div className="min-h-screen bg-slate-950">
