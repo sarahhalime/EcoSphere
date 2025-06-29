@@ -8,9 +8,19 @@ import CarbonCalculator from './components/CarbonCalculator';
 import ClimateAlerts from './components/ClimateAlerts';
 import ProjectTracker from './components/ProjectTracker';
 import EducationHub from './components/EducationHub';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+
 
 function App() {
   return (
+    <>
+      <SignedOut>
+        <SignInButton />
+      </SignedOut>
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
+    
     <Router>
       <Layout>
         <Routes>
@@ -24,6 +34,7 @@ function App() {
         </Routes>
       </Layout>
     </Router>
+    </>
   );
 }
 
