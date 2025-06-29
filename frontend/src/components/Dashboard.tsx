@@ -136,19 +136,10 @@ const Dashboard: React.FC = () => {
     { category: 'Insects', count: 678, trend: 'up' },
   ];
 
-  const recentProjects = [
+  const projects = [
     { id: 1, name: 'Amazon Restoration', progress: 78, location: 'Brazil', trees: 15000 },
     { id: 2, name: 'Sahel Regreening', progress: 45, location: 'Mali', trees: 8500 },
     { id: 3, name: 'Coastal Mangroves', progress: 92, location: 'Philippines', trees: 12000 },
-  ];
-
-  // Project location data for the map
-  const projectLocations = [
-    { id: 1, name: 'Amazon Restoration', location: 'Brazil', coordinates: [-3.4653, -62.2159], trees: 15000, status: 'Active', area: 50000 },
-    { id: 2, name: 'Sahel Regreening', location: 'Mali', coordinates: [17.5707, -3.9962], trees: 8500, status: 'Active', area: 35000 },
-    { id: 3, name: 'Coastal Mangroves', location: 'Philippines', coordinates: [14.5995, 120.9842], trees: 12000, status: 'Active', area: 28000 },
-    { id: 4, name: 'Congo Basin Protection', location: 'DR Congo', coordinates: [-0.2280, 15.8277], trees: 23000, status: 'Planned', area: 75000 },
-    { id: 5, name: 'Borneo Rainforest', location: 'Indonesia', coordinates: [0.9619, 114.5548], trees: 18700, status: 'Active', area: 42000 }
   ];
 
   const formatTimeAgo = (dateString: string): string => {
@@ -393,7 +384,7 @@ const Dashboard: React.FC = () => {
             </Link> */}
           </div>
           <div className="space-y-4">
-            {recentProjects.map((project) => (
+            {projects.map((project) => (
               <div key={project.id} className="p-4 bg-slate-800/30 rounded-xl border border-slate-700/50">
                 <div className="flex items-center justify-between mb-3">
                   <div>
@@ -417,17 +408,16 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Map Section - Example Usage of Leaflet Map */}
+      {/* Map Section - Global Environmental Map */}
       <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-white">Global Reforestation Projects</h3>
-          <p className="text-slate-400 text-sm">Locations of active reforestation projects worldwide</p>
+          <h3 className="text-lg font-semibold text-white">Global Environmental Map</h3>
+          <p className="text-slate-400 text-sm">Search and explore locations worldwide for environmental monitoring</p>
         </div>
         <div className="h-80">
           <LeafletMap
             center={[20, 0]}
             zoom={2}
-            projectLocations={projectLocations}
           />
         </div>
       </div>
