@@ -14,14 +14,19 @@ import {
   User,
   Search
 } from 'lucide-react';
+import { SignInButton, SignOutButton, UserButton, useUser } from '@clerk/clerk-react';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
+
+
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+
+  const {user, isSignedIn} = useUser();
 
   const navigation = [
     { name: 'Dashboard', href: '/', icon: MapPin },
@@ -81,17 +86,32 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </nav>
 
           {/* User profile */}
-          <div className="px-4 py-6 border-t border-slate-800/50">
             <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-slate-800/50">
-              <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
-                <User className="h-4 w-4 text-white" />
-              </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">Sarah Chen</p>
-                <p className="text-xs text-slate-400">Conservation Lead</p>
+                {isSignedIn?
+                <div className="p-2 bg-gradient-to-br flex  gap-2 iems-center justify-center from-blue-500 to-purple-600 rounded-lg">
+                  <UserButton/>
+                  <SignOutButton>
+                    <button className="text-sm font-medium text-white truncate">
+                      Sign Out
+                    </button>
+                  </SignOutButton>
+                </div>
+                :
+                <div className="p-2 bg-gradient-to-br flex  gap-2 iems-center justify-center from-blue-500 to-purple-600 rounded-lg">
+                  <User className="h-4 w-4 text-white" />
+                  <SignInButton mode='modal'>
+                    <button className="text-sm font-medium text-white truncate">
+                      Sign In/Sign Up
+                    </button>
+                  </SignInButton>
+                </div>
+                  }
               </div>
             </div>
-          </div>
+
+
+
         </div>
       </div>
 
