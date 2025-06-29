@@ -6,6 +6,7 @@ import ForestMonitor from './components/ForestMonitor';
 import BiodiversityTracker from './components/BiodiversityTracker';
 import CarbonCalculator from './components/CarbonCalculator';
 import ClimateAlerts from './components/ClimateAlerts';
+import EcoAI from './components/EcoAI';
 
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/forest" element={<ForestMonitor />} />
           <Route path="/biodiversity" element={<BiodiversityTracker />} />
           <Route path="/climate" element={<ClimateAlerts />} />
+          <Route path="/ecoai" element={<EcoAI />} />
         </Routes>
       </Layout>
     </Router>

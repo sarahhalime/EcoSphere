@@ -12,7 +12,8 @@ import {
   X,
   Bell,
   User,
-  Search
+  Search,
+  Brain
 } from 'lucide-react';
 import { SignInButton, SignOutButton, UserButton, useUser } from '@clerk/clerk-react';
 
@@ -32,7 +33,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { name: 'Dashboard', href: '/', icon: MapPin },
     { name: 'Forest Monitor', href: '/forest', icon: TreePine },
     { name: 'Biodiversity', href: '/biodiversity', icon: Bird },
-    { name: 'Climate Alerts', href: '/climate', icon: CloudRain }
+    { name: 'Climate Alerts', href: '/climate', icon: CloudRain },
+    { name: 'EcoAI Chat', href: '/ecoai', icon: Brain }
   ];
 
   return (

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.32.2",
+    "@google/generative-ai": "^0.24.1",
     "axios": "^1.10.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.344.0",
