@@ -3,6 +3,8 @@ import { sb } from "../../lib/sendbirdClient";
 import { useSendbirdAuth } from "../../hooks/useSendbirdAuth";
 import type { BaseMessage } from "@sendbird/chat/message";
 import { useUser } from "@clerk/clerk-react";
+import { TbAlignLeft } from "react-icons/tb";
+import { IoCloseSharp } from "react-icons/io5";
 
 const ChatPage = () => {
   // — State hooks
@@ -253,7 +255,7 @@ const ChatPage = () => {
                   className="text-sm underline"
                   onClick={() => setShowMembersPanel((prev) => !prev)}
                 >
-                  {showMembersPanel ? "Hide" : "Extension"}
+                  {showMembersPanel ? <IoCloseSharp className="text-xl" /> : <TbAlignLeft className="text-xl"/>}
                 </button>
               </div>
             </div>
