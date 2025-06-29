@@ -294,7 +294,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Bottom Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Climate Alerts */}
         <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-6">
@@ -363,38 +363,6 @@ const Dashboard: React.FC = () => {
                     <ArrowUpRight className="h-4 w-4" /> : 
                     <ArrowDownRight className="h-4 w-4" />
                   }
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Recent Projects */}
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-white">Active Projects</h3>
-            {/* <Link to="/projects" className="text-emerald-400 hover:text-emerald-300 text-sm font-medium transition-colors">
-              Manage All
-            </Link> */}
-          </div>
-          <div className="space-y-4">
-            {projects.map((project) => (
-              <div key={project.id} className="p-4 bg-slate-800/30 rounded-xl border border-slate-700/50">
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <p className="text-sm font-medium text-white">{project.name}</p>
-                    <p className="text-xs text-slate-400 flex items-center gap-1 mt-1">
-                      <MapPin className="h-3 w-3" />
-                      {project.location} · {project.trees.toLocaleString()} trees
-                    </p>
-                  </div>
-                  <span className="text-sm font-medium text-emerald-400">{project.progress}%</span>
-                </div>
-                <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${project.progress}%` }}
-                  ></div>
                 </div>
               </div>
             ))}
