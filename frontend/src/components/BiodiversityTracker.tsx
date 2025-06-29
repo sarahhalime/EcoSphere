@@ -360,7 +360,7 @@ const BiodiversityTracker: React.FC = () => {
       {/* Stats Overview - Full Width */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
         {/* Total Species */}
-        <div className="bg-slate-900/50 backdrop-blur-md border border-blue-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
+        {/* <div className="bg-slate-900/50 backdrop-blur-md border border-blue-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
           <div className="flex-1">
             <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Total Species</p>
             <p className="text-3xl font-extrabold text-white mt-2">1,269</p>
@@ -373,10 +373,10 @@ const BiodiversityTracker: React.FC = () => {
           <div className="p-5 bg-blue-500/20 rounded-2xl flex items-center justify-center">
             <Bird className="h-12 w-12 text-blue-400" />
           </div>
-        </div>
+        </div> */}
 
         {/* Photo Uploads */}
-        <div className="bg-slate-900/50 backdrop-blur-md border border-emerald-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
+        {/* <div className="bg-slate-900/50 backdrop-blur-md border border-emerald-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
           <div className="flex-1">
             <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Photo Uploads</p>
             <p className="text-3xl font-extrabold text-white mt-2">3,847</p>
@@ -389,7 +389,7 @@ const BiodiversityTracker: React.FC = () => {
           <div className="p-5 bg-emerald-500/20 rounded-2xl flex items-center justify-center">
             <Camera className="h-12 w-12 text-emerald-400" />
           </div>
-        </div>
+        </div> */}
 
         {/* Threatened */}
         <div className="bg-slate-900/50 backdrop-blur-md border border-red-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
