@@ -4,45 +4,66 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Area
 import { getWeatherData, MONITORED_LOCATIONS, Location } from '../utils/weather';
 import { getClimateRiskData, getTemperatureData, RiskData } from '../utils/climateData';
 
+interface WeatherAlert {
+  id: number;
+  type: string;
+  severity: string;
+  location: string;
+  description: string;
+  issued: string;
+  expires: string;
+  affectedArea: string;
+  icon: string;
+  temperature: number;
+  humidity: number;
+  windSpeed: number;
+}
+
+interface TemperatureDataPoint {
+  time: string;
+  temp: number;
+  avg: number;
+}
+
 const ClimateAlerts: React.FC = () => {
   const [selectedSeverity, setSelectedSeverity] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
   const [selectedLocation, setSelectedLocation] = useState('all');
-  const [alerts, setAlerts] = useState<any[]>([]);
+  const [alerts, setAlerts] = useState<WeatherAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [riskData, setRiskData] = useState<RiskData[]>([]);
-  const [temperatureData, setTemperatureData] = useState<any[]>([]);
+  const [temperatureData, setTemperatureData] = useState<TemperatureDataPoint[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       try {
-        // Fetch weather alerts
+        // Fetch weather alerts from real APIs
         const allAlerts = await Promise.all(
           MONITORED_LOCATIONS.map(location => getWeatherData(location.name))
         );
         setAlerts(allAlerts.flat());
 
-        // Fetch climate risk data
+        // Fetch climate risk data from real APIs
         const riskData = await getClimateRiskData();
         setRiskData(riskData);
 
-        // Get temperature data
-        const tempData = getTemperatureData();
+        // Get real temperature data from API
+        const tempData = await getTemperatureData();
         setTemperatureData(tempData);
       } catch (err) {
-        setError('Failed to fetch weather data');
-        console.error(err);
+        setError('Failed to fetch weather data from APIs');
+        console.error('API Error:', err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-    // Refresh data every 15 minutes
-    const interval = setInterval(fetchData, 15 * 60 * 1000);
+    // Refresh data every 5 minutes for real-time updates
+    const interval = setInterval(fetchData, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -77,7 +98,9 @@ const ClimateAlerts: React.FC = () => {
 
   const filteredAlerts = alerts.filter(alert => {
     const severityMatch = selectedSeverity === 'all' || alert.severity === selectedSeverity;
-    const typeMatch = selectedType === 'all' || alert.type.toLowerCase().includes(selectedType.toLowerCase());
+    const typeMatch = selectedType === 'all' ||
+      alert.type.toLowerCase().includes(selectedType.toLowerCase()) ||
+      alert.description.toLowerCase().includes(selectedType.toLowerCase());
     const locationMatch = selectedLocation === 'all' || alert.location === selectedLocation;
     return severityMatch && typeMatch && locationMatch;
   });
