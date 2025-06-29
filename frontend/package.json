@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.32.2",
+    "@google/generative-ai": "^0.24.1",
     "@sendbird/chat": "^4.19.2",
     "@sendbird/uikit-react": "^3.16.10",
     "axios": "^1.10.0",

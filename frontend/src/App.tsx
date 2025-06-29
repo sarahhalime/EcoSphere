@@ -6,10 +6,12 @@ import ForestMonitor from './components/ForestMonitor';
 import BiodiversityTracker from './components/BiodiversityTracker';
 import CarbonCalculator from './components/CarbonCalculator';
 import ClimateAlerts from './components/ClimateAlerts';
+import EcoAI from './components/EcoAI';
 
 import ChatPage from './components/Chat/ChatPage';
-function App() {
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 
+function App() {
   return (
     <>
 
@@ -20,7 +22,8 @@ function App() {
           <Route path="/forest" element={<ForestMonitor />} />
           <Route path="/biodiversity" element={<BiodiversityTracker />} />
           <Route path="/climate" element={<ClimateAlerts />} />
-          <Route path="/my-inbox" element={<ChatPage/>} />
+          <Route path="/ecoai" element={<EcoAI />} />
+            <Route path="/my-inbox" element={<ChatPage/>} />
         </Routes>
       </Layout>
     </Router>
