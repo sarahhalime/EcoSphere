@@ -193,7 +193,7 @@ const ChatPage = () => {
             />
             <input
               type="text"
-              placeholder="Search by username or user ID 2"
+              placeholder="Search by username or user ID"
               value={searchEmail}
               onChange={(e) => setSearchEmail(e.target.value)}
               className="w-full p-2 mb-2 border rounded-lg text-black"
