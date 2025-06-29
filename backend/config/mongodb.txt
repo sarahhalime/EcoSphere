@@ -1,0 +1,6 @@
+
+For MongoDB database
+username = ecosphere
+password = ISJ6H9cJtXd2gxU1
+
+mongodb+srv://ecosphere:ISJ6H9cJtXd2gxU1@ecosphere.wgmw7vc.mongodb.net/?retryWrites=true&w=majority&appName=EcoSphere
