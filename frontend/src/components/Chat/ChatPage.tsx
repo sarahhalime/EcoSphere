@@ -149,17 +149,25 @@ const openRemoveModal = () => {
   setRemoveSelectedIds([]);
 };
 
-const handleRemoveUsers = async (userId: string) => {
+// const handleRemoveUsers = async (userId: string) => {
+//   if (!currentChannel) return;
+
+//   try {
+//     await currentChannel.kickUserWithUserId(userId); // ✅ Use this for SDK v4
+//     const updatedChannel = await sb.GroupChannel.getChannel(currentChannel.url);
+//     setChannelMembers(updatedChannel.members);
+//   } catch (err) {
+//     console.error("Failed to remove users:", err);
+//   }
+// };
+
+const handleDeleteChannel = async () => {
   if (!currentChannel) return;
 
-  try {
-    await currentChannel.kickUserWithUserId(userId); // ✅ Use this for SDK v4
-    const updatedChannel = await sb.GroupChannel.getChannel(currentChannel.url);
-    setChannelMembers(updatedChannel.members);
-  } catch (err) {
-    console.error("Failed to remove users:", err);
-  }
+  const confirmed = window.confirm("Are you sure you want to delete this group?");
+  if (!confirmed) return;
 };
+
 
 
 const openAllUsersModal = () => {
@@ -341,6 +349,12 @@ const openAllUsersModal = () => {
                     >
                      View All Members
                     </button>
+                    <button
+                      className="bg-red-700 text-white px-3 py-1 rounded-lg text-xs"
+                      onClick={handleDeleteChannel}
+                    >
+                      Delete Group
+                    </button>
                   </div>
                 </div>
               </div>
@@ -351,7 +365,7 @@ const openAllUsersModal = () => {
                 <div className="bg-black rounded-lg p-6 w-96 max-h-[80%] overflow-y-auto text-white">
                   <div className="flex justify-between items-center mb-2">
                     <h3 className="text-lg font-semibold">Add Users</h3>
-                    <button onClick={() => setShowAddModal(false)}>X</button>
+                    <button onClick={() => setShowAddModal(false)}><IoCloseSharp className="text-xl"/></button>
                   </div>
                   <input
                     type="text"
@@ -396,7 +410,7 @@ const openAllUsersModal = () => {
     <div className="bg-black rounded-lg p-6 w-96 max-h-[80%] overflow-y-auto text-white">
       <div className="flex justify-between items-center mb-2">
         <h3 className="text-lg font-semibold">Remove Users</h3>
-        <button onClick={() => setShowRemoveModal(false)}>X</button>
+        <button onClick={() => setShowRemoveModal(false)}><IoCloseSharp className="text-xl"/></button>
       </div>
       <input
         type="text"
@@ -449,7 +463,7 @@ const openAllUsersModal = () => {
     <div className="bg-black rounded-lg p-6 w-96 max-h-[80%] overflow-y-auto text-white">
       <div className="flex justify-between items-center mb-2">
         <h3 className="text-lg font-semibold">Group Members</h3>
-        <button onClick={() => setShowAllUsersModal(false)}>X</button>
+        <button onClick={() => setShowAllUsersModal(false)}><IoCloseSharp className="text-xl"/></button>
       </div>
       <div className="space-y-3">
         {channelMembers.map((m) => (
