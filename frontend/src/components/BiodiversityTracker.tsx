@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Bird, Camera, Upload, MapPin, Search, Filter, TrendingUp, TrendingDown, Star, Eye, Info, ChevronRight, Leaf, AlertTriangle, Loader2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { fetchINaturalistConservationStatus, ConservationStatusData, speciesCategories } from './BiodiversityAnalytics';
+import LeafletMap from './Map/LeafletMap';
 
 // Wikipedia API interfaces
 interface WikipediaSearchResult {
@@ -27,6 +28,13 @@ interface SpeciesWikiInfo {
 
 const BiodiversityTracker: React.FC = () => {
 
+  //Biodiversity Analytics State
+const [threatLevels, setThreatLevels] = useState<ConservationStatusData[]>([]);
+useEffect(() => {
+  fetchINaturalistConservationStatus().then(setThreatLevels);
+}, []);
+//Biodiversity Analytics State Ends
+
   const [selectedTab, setSelectedTab] = useState('upload');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -37,6 +45,7 @@ const BiodiversityTracker: React.FC = () => {
   const [selectedSpecies, setSelectedSpecies] = useState<number | null>(null);
     const [identificationResult, setIdentificationResult] = useState<any>(null);
     const [loading, setLoading] = useState(false);
+    const [showMapModal, setShowMapModal] = useState(false);
 
   const speciesData = [
     { category: 'Birds', count: 234, trend: 5.2, color: '#3b82f6' },
@@ -47,13 +56,13 @@ const BiodiversityTracker: React.FC = () => {
     { category: 'Insects', count: 678, trend: 7.3, color: '#06b6d4' },
   ];
 
-  const threatLevels = [
-    { name: 'Least Concern', value: 45, color: '#10b981' },
-    { name: 'Near Threatened', value: 25, color: '#f59e0b' },
-    { name: 'Vulnerable', value: 20, color: '#f97316' },
-    { name: 'Endangered', value: 8, color: '#ef4444' },
-    { name: 'Critically Endangered', value: 2, color: '#991b1b' },
-  ];
+  // const threatLevels = [
+  //   { name: 'Least Concern', value: 45, color: '#10b981' },
+  //   { name: 'Near Threatened', value: 25, color: '#f59e0b' },
+  //   { name: 'Vulnerable', value: 20, color: '#f97316' },
+  //   { name: 'Endangered', value: 8, color: '#ef4444' },
+  //   { name: 'Critically Endangered', value: 2, color: '#991b1b' },
+  // ];
 
   const recentSightings = [
     {
@@ -142,18 +151,7 @@ const BiodiversityTracker: React.FC = () => {
       threats: ['Habitat Loss', 'Poaching', 'Human Conflict'],
       image: 'https://images.pexels.com/photos/792381/pexels-photo-792381.jpeg?auto=compress&cs=tinysrgb&w=800'
     },
-    {
-      id: 2,
-      name: 'Ara macao',
-      commonName: 'Scarlet Macaw',
-      category: 'Birds',
-      status: 'Least Concern',
-      habitat: 'Tropical Rainforests',
-      region: 'Central and South America',
-      population: 'Unknown',
-      threats: ['Habitat Loss', 'Pet Trade'],
-      image: 'https://images.pexels.com/photos/1564471/pexels-photo-1564471.jpeg?auto=compress&cs=tinysrgb&w=800'
-    },
+
     {
       id: 3,
       name: 'Ailuropoda melanoleuca',
@@ -346,63 +344,58 @@ const BiodiversityTracker: React.FC = () => {
           <p className="text-slate-400 mt-1">AI-powered species identification and conservation monitoring</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-500/20 text-blue-400 rounded-xl border border-blue-500/30 hover:bg-blue-500/30 transition-colors">
+          <button
+            className="flex items-center gap-2 px-4 py-2 bg-blue-500/20 text-blue-400 rounded-xl border border-blue-500/30 hover:bg-blue-500/30 transition-colors"
+            onClick={() => setSelectedTab('search')}
+          >
             <Search className="h-4 w-4" />
-            Species Database
+            Search Species
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors">
+          <button
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors"
+            onClick={() => setShowMapModal(true)}
+          >
             <MapPin className="h-4 w-4" />
             View Map
           </button>
         </div>
       </div>
 
-      {/* Stats Overview - Full Width */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+      {/* Stats Overview - Side by Side Icons */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         {/* Total Species */}
-        {/* <div className="bg-slate-900/50 backdrop-blur-md border border-blue-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
-          <div className="flex-1">
+        <div className="bg-slate-900/50 backdrop-blur-md border border-blue-700/30 rounded-2xl p-4 flex flex-col items-center justify-center w-full">
+          <div className="flex flex-col items-center w-full">
             <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Total Species</p>
-            <p className="text-3xl font-extrabold text-white mt-2">1,269</p>
+            <div className="flex items-center justify-center gap-3 mt-2">
+              <span className="text-3xl font-extrabold text-white">1,269</span>
+              <span className="p-2 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                <Bird className="h-8 w-8 text-blue-400" />
+              </span>
+            </div>
             <div className="flex items-center gap-2 mt-3">
-              <TrendingUp className="h-5 w-5 text-emerald-400" />
+              <TrendingUp className="h-4 w-4 text-emerald-400" />
               <span className="text-emerald-300 text-base font-semibold">+156</span>
               <span className="text-slate-500 text-xs">this month</span>
             </div>
           </div>
-          <div className="p-5 bg-blue-500/20 rounded-2xl flex items-center justify-center">
-            <Bird className="h-12 w-12 text-blue-400" />
-          </div>
-        </div> */}
+        </div>
 
         {/* Photo Uploads */}
-        {/* <div className="bg-slate-900/50 backdrop-blur-md border border-emerald-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
-          <div className="flex-1">
+        <div className="bg-slate-900/50 backdrop-blur-md border border-emerald-700/30 rounded-2xl p-4 flex flex-col items-center justify-center w-full">
+          <div className="flex flex-col items-center w-full">
             <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Photo Uploads</p>
-            <p className="text-3xl font-extrabold text-white mt-2">3,847</p>
-            <div className="flex items-center gap-2 mt-3">
-              <TrendingUp className="h-5 w-5 text-emerald-400" />
-              <span className="text-emerald-300 text-base font-semibold">+23%</span>
-              <span className="text-slate-500 text-xs">this week</span>
+            <div className="flex items-center justify-center gap-3 mt-2">
+              <span className="text-3xl font-extrabold text-white">1,269</span>
+              <span className="p-2 bg-emerald-500/20 rounded-xl flex items-center justify-center">
+                <Camera className="h-8 w-8 text-emerald-400" />
+              </span>
             </div>
-          </div>
-          <div className="p-5 bg-emerald-500/20 rounded-2xl flex items-center justify-center">
-            <Camera className="h-12 w-12 text-emerald-400" />
-          </div>
-        </div> */}
-
-        {/* Threatened */}
-        <div className="bg-slate-900/50 backdrop-blur-md border border-red-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
-          <div className="flex-1">
-            <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Threatened</p>
-            <p className="text-3xl font-extrabold text-white mt-2">127</p>
             <div className="flex items-center gap-2 mt-3">
-              <TrendingDown className="h-5 w-5 text-red-400" />
-              <span className="text-red-300 text-base font-semibold">species at risk</span>
+              <TrendingUp className="h-4 w-4 text-emerald-400" />
+              <span className="text-emerald-300 text-base font-semibold">+156</span>
+              <span className="text-slate-500 text-xs">this month</span>
             </div>
-          </div>
-          <div className="p-5 bg-red-500/20 rounded-2xl flex items-center justify-center">
-            <TrendingDown className="h-12 w-12 text-red-400" />
           </div>
         </div>
       </div>
@@ -792,6 +785,72 @@ const BiodiversityTracker: React.FC = () => {
               </div>
           )}
 
+          {/* {selectedTab === 'analytics' && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
+                    <h4 className="text-lg font-semibold text-white mb-6">Species by Category</h4>
+                    <div className="h-80">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={speciesData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                          <XAxis dataKey="category" stroke="#64748b" />
+                          <YAxis stroke="#64748b" />
+                          <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
+                    <h4 className="text-lg font-semibold text-white mb-6">Conservation Status</h4>
+                    <div className="h-80 flex items-center justify-center">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                              data={threatLevels}
+                              cx="50%"
+                              cy="50%"
+                              outerRadius={100}
+                              dataKey="value"
+                              label={({ name, value }) => `${name}: ${value}%`}
+                          >
+                            {threatLevels.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                          </Pie>
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
+                  <h4 className="text-lg font-semibold text-white mb-6">Population Trends</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {speciesData.map((species) => (
+                        <div key={species.category} className="p-4 bg-slate-900/50 rounded-xl">
+                          <div className="flex items-center justify-between mb-2">
+                            <h5 className="font-medium text-white">{species.category}</h5>
+                            <div className={`flex items-center gap-1 ${
+                                species.trend > 0 ? 'text-emerald-400' : 'text-red-400'
+                            }`}>
+                              {species.trend > 0 ?
+                                  <TrendingUp className="h-4 w-4" /> :
+                                  <TrendingDown className="h-4 w-4" />
+                              }
+                              <span className="text-sm font-medium">
+                            {species.trend > 0 ? '+' : ''}{species.trend}%
+                          </span>
+                            </div>
+                          </div>
+                          <p className="text-slate-400 text-sm">{species.count} species documented</p>
+                        </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+          )} */}
 
           {selectedTab === 'analytics' && (
   <div className="space-y-6">
@@ -843,6 +902,29 @@ const BiodiversityTracker: React.FC = () => {
 )}
         </div>
       </div>
+
+      {/* Map Modal */}
+      {showMapModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="bg-slate-900 rounded-2xl shadow-xl p-4 w-full max-w-4xl relative">
+            <button
+              className="absolute top-4 right-4 text-slate-400 hover:text-white text-2xl"
+              onClick={() => setShowMapModal(false)}
+              aria-label="Close Map"
+            >
+              &times;
+            </button>
+            <h2 className="text-xl font-bold text-white mb-4">Global Reforestation Projects</h2>
+            <div className="h-96 w-full">
+              <LeafletMap
+                center={[20, 0]}
+                zoom={2}
+                projectLocations={[]}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
 );
 };

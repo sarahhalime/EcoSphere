@@ -175,16 +175,10 @@ const Dashboard: React.FC = () => {
           <h1 className="text-3xl font-bold text-white">Environmental Dashboard</h1>
           <p className="text-slate-400 mt-1">Monitor global forest health, biodiversity, and climate action</p>
         </div>
-        {/* <div className="flex items-center gap-3">
-          <div className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30 text-sm font-medium">
-            <Calendar className="inline h-4 w-4 mr-2" />
-            Last updated: {isLoadingForest || isLoadingAlerts ? 'Loading...' : '15 mins ago'}
-          </div>
-        </div> */}
       </div>
 
       {/* Key Metrics - Responsive Full Width */}
-      <div className="grid grid-cols-2 gap-6 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
         {/* Forest Coverage */}
         <div className="bg-slate-900/50 backdrop-blur-sm border border-emerald-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex-1">
@@ -221,7 +215,20 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Species Tracked */}
-
+        <div className="bg-slate-900/50 backdrop-blur-sm border border-blue-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex-1">
+            <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Species Tracked</p>
+            <p className="text-3xl font-extrabold text-white mt-2">1,457</p>
+            <div className="flex items-center gap-2 mt-3">
+              <ArrowUpRight className="h-5 w-5 text-blue-400" />
+              <span className="text-blue-300 text-base font-semibold">+156</span>
+              <span className="text-slate-500 text-xs">this week</span>
+            </div>
+          </div>
+          <div className="p-5 bg-blue-500/20 rounded-2xl flex items-center justify-center">
+            <Bird className="h-12 w-12 text-blue-400" />
+          </div>
+        </div>
 
         {/* Active Alerts */}
         <div className="bg-slate-900/50 backdrop-blur-sm border border-red-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -405,7 +412,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Map Section - Example Usage of Leaflet Map */}
-      <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
+      <div id="dashboard-map-section" className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
         <div className="mb-4">
           <h3 className="text-lg font-semibold text-white">Global Reforestation Projects</h3>
           <p className="text-slate-400 text-sm">Locations of active reforestation projects worldwide</p>
