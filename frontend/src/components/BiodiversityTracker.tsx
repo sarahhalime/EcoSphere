@@ -27,13 +27,6 @@ interface SpeciesWikiInfo {
 
 const BiodiversityTracker: React.FC = () => {
 
-  //Biodiversity Analytics State
-const [threatLevels, setThreatLevels] = useState<ConservationStatusData[]>([]);
-useEffect(() => {
-  fetchINaturalistConservationStatus().then(setThreatLevels);
-}, []);
-//Biodiversity Analytics State Ends
-
   const [selectedTab, setSelectedTab] = useState('upload');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -54,13 +47,13 @@ useEffect(() => {
     { category: 'Insects', count: 678, trend: 7.3, color: '#06b6d4' },
   ];
 
-  // const threatLevels = [
-  //   { name: 'Least Concern', value: 45, color: '#10b981' },
-  //   { name: 'Near Threatened', value: 25, color: '#f59e0b' },
-  //   { name: 'Vulnerable', value: 20, color: '#f97316' },
-  //   { name: 'Endangered', value: 8, color: '#ef4444' },
-  //   { name: 'Critically Endangered', value: 2, color: '#991b1b' },
-  // ];
+  const threatLevels = [
+    { name: 'Least Concern', value: 45, color: '#10b981' },
+    { name: 'Near Threatened', value: 25, color: '#f59e0b' },
+    { name: 'Vulnerable', value: 20, color: '#f97316' },
+    { name: 'Endangered', value: 8, color: '#ef4444' },
+    { name: 'Critically Endangered', value: 2, color: '#991b1b' },
+  ];
 
   const recentSightings = [
     {
@@ -799,72 +792,6 @@ useEffect(() => {
               </div>
           )}
 
-          {/* {selectedTab === 'analytics' && (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
-                    <h4 className="text-lg font-semibold text-white mb-6">Species by Category</h4>
-                    <div className="h-80">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={speciesData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                          <XAxis dataKey="category" stroke="#64748b" />
-                          <YAxis stroke="#64748b" />
-                          <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
-                    <h4 className="text-lg font-semibold text-white mb-6">Conservation Status</h4>
-                    <div className="h-80 flex items-center justify-center">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                              data={threatLevels}
-                              cx="50%"
-                              cy="50%"
-                              outerRadius={100}
-                              dataKey="value"
-                              label={({ name, value }) => `${name}: ${value}%`}
-                          >
-                            {threatLevels.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Pie>
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700/50">
-                  <h4 className="text-lg font-semibold text-white mb-6">Population Trends</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {speciesData.map((species) => (
-                        <div key={species.category} className="p-4 bg-slate-900/50 rounded-xl">
-                          <div className="flex items-center justify-between mb-2">
-                            <h5 className="font-medium text-white">{species.category}</h5>
-                            <div className={`flex items-center gap-1 ${
-                                species.trend > 0 ? 'text-emerald-400' : 'text-red-400'
-                            }`}>
-                              {species.trend > 0 ?
-                                  <TrendingUp className="h-4 w-4" /> :
-                                  <TrendingDown className="h-4 w-4" />
-                              }
-                              <span className="text-sm font-medium">
-                            {species.trend > 0 ? '+' : ''}{species.trend}%
-                          </span>
-                            </div>
-                          </div>
-                          <p className="text-slate-400 text-sm">{species.count} species documented</p>
-                        </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-          )} */}
 
           {selectedTab === 'analytics' && (
   <div className="space-y-6">
