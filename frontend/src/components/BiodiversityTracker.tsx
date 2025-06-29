@@ -438,7 +438,7 @@ useEffect(() => {
               >
                   Species Search
               </button>
-            <button
+            {/* <button
                 onClick={() => setSelectedTab('sightings')}
                 className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
                     selectedTab === 'sightings'
@@ -447,7 +447,7 @@ useEffect(() => {
                 }`}
             >
               Recent Sightings
-            </button>
+            </button> */}
             <button
                 onClick={() => setSelectedTab('analytics')}
                 className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
