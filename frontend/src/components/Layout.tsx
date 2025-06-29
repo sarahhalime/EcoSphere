@@ -27,10 +27,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { name: 'Dashboard', href: '/', icon: MapPin },
     { name: 'Forest Monitor', href: '/forest', icon: TreePine },
     { name: 'Biodiversity', href: '/biodiversity', icon: Bird },
-    { name: 'Carbon Calculator', href: '/carbon', icon: Calculator },
-    { name: 'Climate Alerts', href: '/climate', icon: CloudRain },
-    { name: 'Projects', href: '/projects', icon: Leaf },
-    { name: 'Education', href: '/education', icon: GraduationCap },
+    { name: 'Climate Alerts', href: '/climate', icon: CloudRain }
   ];
 
   return (
