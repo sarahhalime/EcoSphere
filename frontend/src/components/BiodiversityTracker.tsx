@@ -355,68 +355,52 @@ const BiodiversityTracker: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-blue-500/20 rounded-xl">
-              <Bird className="h-6 w-6 text-blue-400" />
-            </div>
-            <div>
-              <p className="text-slate-400 text-sm">Total Species</p>
-              <p className="text-2xl font-bold text-white">1,269</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-emerald-400" />
-            <span className="text-emerald-400 text-sm font-medium">+156 this month</span>
-          </div>
-        </div>
-
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-emerald-500/20 rounded-xl">
-              <Camera className="h-6 w-6 text-emerald-400" />
-            </div>
-            <div>
-              <p className="text-slate-400 text-sm">Photo Uploads</p>
-              <p className="text-2xl font-bold text-white">3,847</p>
+      {/* Stats Overview - Full Width */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+        {/* Total Species */}
+        <div className="bg-slate-900/50 backdrop-blur-md border border-blue-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
+          <div className="flex-1">
+            <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Total Species</p>
+            <p className="text-3xl font-extrabold text-white mt-2">1,269</p>
+            <div className="flex items-center gap-2 mt-3">
+              <TrendingUp className="h-5 w-5 text-emerald-400" />
+              <span className="text-emerald-300 text-base font-semibold">+156</span>
+              <span className="text-slate-500 text-xs">this month</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-emerald-400" />
-            <span className="text-emerald-400 text-sm font-medium">+23% this week</span>
+          <div className="p-5 bg-blue-500/20 rounded-2xl flex items-center justify-center">
+            <Bird className="h-12 w-12 text-blue-400" />
           </div>
         </div>
 
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-amber-500/20 rounded-xl">
-              <Star className="h-6 w-6 text-amber-400" />
-            </div>
-            <div>
-              <p className="text-slate-400 text-sm">Avg Confidence</p>
-              <p className="text-2xl font-bold text-white">94.2%</p>
+        {/* Photo Uploads */}
+        <div className="bg-slate-900/50 backdrop-blur-md border border-emerald-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
+          <div className="flex-1">
+            <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Photo Uploads</p>
+            <p className="text-3xl font-extrabold text-white mt-2">3,847</p>
+            <div className="flex items-center gap-2 mt-3">
+              <TrendingUp className="h-5 w-5 text-emerald-400" />
+              <span className="text-emerald-300 text-base font-semibold">+23%</span>
+              <span className="text-slate-500 text-xs">this week</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-amber-400" />
-            <span className="text-amber-400 text-sm font-medium">AI accuracy</span>
+          <div className="p-5 bg-emerald-500/20 rounded-2xl flex items-center justify-center">
+            <Camera className="h-12 w-12 text-emerald-400" />
           </div>
         </div>
 
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-red-500/20 rounded-xl">
-              <TrendingDown className="h-6 w-6 text-red-400" />
-            </div>
-            <div>
-              <p className="text-slate-400 text-sm">Threatened</p>
-              <p className="text-2xl font-bold text-white">127</p>
+        {/* Threatened */}
+        <div className="bg-slate-900/50 backdrop-blur-md border border-red-700/30 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
+          <div className="flex-1">
+            <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide">Threatened</p>
+            <p className="text-3xl font-extrabold text-white mt-2">127</p>
+            <div className="flex items-center gap-2 mt-3">
+              <TrendingDown className="h-5 w-5 text-red-400" />
+              <span className="text-red-300 text-base font-semibold">species at risk</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-red-400 text-sm font-medium">species at risk</span>
+          <div className="p-5 bg-red-500/20 rounded-2xl flex items-center justify-center">
+            <TrendingDown className="h-12 w-12 text-red-400" />
           </div>
         </div>
       </div>
