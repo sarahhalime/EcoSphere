@@ -27,6 +27,16 @@ const ChatPage = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [addSearch, setAddSearch] = useState("");
   const [addSelectedIds, setAddSelectedIds] = useState<string[]>([]);
+
+
+
+const [showRemoveModal, setShowRemoveModal] = useState(false);
+const [removeSearch, setRemoveSearch] = useState("");
+const [removeSelectedIds, setRemoveSelectedIds] = useState<string[]>([]);
+
+const [showAllUsersModal, setShowAllUsersModal] = useState(false);
+
+
   
   const [allUsers, setAllUsers] = useState<any[]>([]);
   const [memberSearch, setMemberSearch] = useState(""); // <-- Add this line
@@ -60,12 +70,6 @@ useEffect(() => {
   })();
 }, []);
 
-  // — Load channels & users on mount
-  // useEffect(() => {
-  //   fetchChannels();
-  //   fetchAllUsers();
-  // }, []);
-
   const fetchChannels = () => {
     const q = sb.GroupChannel.createMyGroupChannelListQuery();
     q.includeEmpty = true;
@@ -82,24 +86,6 @@ useEffect(() => {
       console.error("Error fetching Sendbird users:", err);
     }
   };
-
-  // const openChannel = async (ch: any) => {
-  //   setCurrentChannel(ch);
-
-  //   // Load messages
-  //   const msgs = await new Promise<BaseMessage[]>((res) => {
-  //     const q = ch.createPreviousMessageListQuery();
-  //     q.load(30, true, (m: BaseMessage[], e: Error | null) => {
-  //       if (!e) res(m);
-  //       else res([]);
-  //     });
-  //   });
-  //   setMessages(msgs);
-
-  //   // Load members
-  //   const mems = await ch.getMembers();
-  //   setChannelMembers(mems);
-  // };
 
   const openChannel = async (ch: any) => {
   try {
@@ -123,6 +109,48 @@ useEffect(() => {
     console.error("Error opening channel:", err);
   }
 };
+
+const handleAddUsers = async () => {
+  if (!currentChannel || addSelectedIds.length === 0) return;
+
+  try {
+    await currentChannel.inviteWithUserIds(addSelectedIds);
+    const updatedChannel = await sb.GroupChannel.getChannel(currentChannel.url);
+    setChannelMembers(updatedChannel.members);
+    setShowAddModal(false);
+  } catch (err) {
+    console.error("Failed to add users:", err);
+  }
+};
+
+
+
+const openRemoveModal = () => {
+  setShowRemoveModal(true);
+  setRemoveSearch("");
+  setRemoveSelectedIds([]);
+};
+
+const handleRemoveUsers = async (userId: string) => {
+  if (!currentChannel) return;
+
+  try {
+    await currentChannel.kickUserWithUserId(userId); // ✅ Use this for SDK v4
+    const updatedChannel = await sb.GroupChannel.getChannel(currentChannel.url);
+    setChannelMembers(updatedChannel.members);
+  } catch (err) {
+    console.error("Failed to remove users:", err);
+  }
+};
+
+
+const openAllUsersModal = () => {
+  setShowAllUsersModal(true);
+};
+
+
+
+
 
   const sendMessage = () => {
     if (!message.trim() || !currentChannel) return;
@@ -288,13 +316,15 @@ useEffect(() => {
                     </button>
                     <button
                       className="bg-red-600 text-white px-2 py-1 rounded-lg text-xs"
+                      onClick={openRemoveModal}
                     >
                       Remove Users
                     </button>
                     <button
                       className="bg-yellow-600 text-white px-2 py-1 rounded-lg text-xs"
+                      onClick={openAllUsersModal}
                     >
-                     View All Users
+                     View All Members
                     </button>
                   </div>
                 </div>
@@ -338,12 +368,85 @@ useEffect(() => {
                   </div>
                   <button
                     className="w-full p-2 bg-black text-red-500 rounded-lg"
+                    onClick={handleAddUsers}
                   >
                     Add Users
                   </button>
                 </div>
               </div>
             )}
+
+            {showRemoveModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="bg-black rounded-lg p-6 w-96 max-h-[80%] overflow-y-auto text-white">
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-lg font-semibold">Remove Users</h3>
+        <button onClick={() => setShowRemoveModal(false)}>X</button>
+      </div>
+      <input
+        type="text"
+        placeholder="Search members"
+        value={removeSearch}
+        onChange={(e) => setRemoveSearch(e.target.value)}
+        className="w-full p-2 mb-3 border rounded-lg text-black"
+      />
+      <div className="h-fit overflow-y-auto mb-4">
+        {channelMembers
+          .filter((m) =>
+            (m.nickname || m.userId).toLowerCase().includes(removeSearch.toLowerCase())
+          )
+          .map((m) => (
+            <label key={m.userId} className="flex items-center gap-2 mb-2">
+              <input
+                type="checkbox"
+                checked={removeSelectedIds.includes(m.userId)}
+                onChange={(e) => {
+                  setRemoveSelectedIds((cur) =>
+                    e.target.checked
+                      ? [...cur, m.userId]
+                      : cur.filter((id) => id !== m.userId)
+                  );
+                }}
+              />
+              <img src={m.profileUrl || ""} className="w-8 h-8 rounded-full" />
+              <span className="text-xs">{m.nickname}</span>
+            </label>
+          ))}
+      </div>
+      <button
+        className="w-full p-2 bg-black text-red-500 rounded-lg"
+        // onClick={async () => {
+        //   for (const userId of removeSelectedIds) {
+        //     await handleRemoveUsers(userId);
+        //   }
+        //   setShowRemoveModal(false);
+        //   setRemoveSelectedIds([]);
+        // }}
+      >
+        Remove Selected
+      </button>
+    </div>
+  </div>
+)}
+
+{showAllUsersModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="bg-black rounded-lg p-6 w-96 max-h-[80%] overflow-y-auto text-white">
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-lg font-semibold">Group Members</h3>
+        <button onClick={() => setShowAllUsersModal(false)}>X</button>
+      </div>
+      <div className="space-y-3">
+        {channelMembers.map((m) => (
+          <div key={m.userId} className="flex items-center gap-3">
+            <img src={m.profileUrl || ""} className="w-8 h-8 rounded-full" />
+            <span>{m.nickname}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
 
             <div className="flex-1 overflow-y-auto border p-3 rounded-lg mb-3">
               {messages.map((msg) => (
