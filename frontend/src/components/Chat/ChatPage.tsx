@@ -87,6 +87,24 @@ useEffect(() => {
     }
   };
 
+  // const openChannel = async (ch: any) => {
+  //   setCurrentChannel(ch);
+
+  //   // Load messages
+  //   const msgs = await new Promise<BaseMessage[]>((res) => {
+  //     const q = ch.createPreviousMessageListQuery();
+  //     q.load(30, true, (m: BaseMessage[], e: Error | null) => {
+  //       if (!e) res(m);
+  //       else res([]);
+  //     });
+  //   });
+  //   setMessages(msgs);
+
+  //   // Load members
+  //   const mems = await ch.getMembers();
+  //   setChannelMembers(mems);
+  // };
+
   const openChannel = async (ch: any) => {
   try {
     const fullChannel = await sb.GroupChannel.getChannel(ch.url); // fetch full channel object
@@ -147,9 +165,6 @@ const handleRemoveUsers = async (userId: string) => {
 const openAllUsersModal = () => {
   setShowAllUsersModal(true);
 };
-
-
-
 
 
   const sendMessage = () => {
